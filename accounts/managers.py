@@ -8,6 +8,7 @@ class UserManager(BaseUserManager):
             raise ValueError('mobile phone must be provided')
         user = self.model(mobile_phone=mobile_phone, **extra_fields)
         user.set_password(password)
+        user.is_active = False
         user.save(using=self._db)
         return user
 

@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django_jalali.db import models as jmodels
 from accounts.managers import UserManager
-from core.models import SoftDeleteModel
+from core.models import SoftDeleteModel, CreateModel, UpdateModel
 
 
 class User(AbstractUser, SoftDeleteModel):
@@ -23,3 +24,13 @@ class User(AbstractUser, SoftDeleteModel):
 class UserDeleted(User):
     class Meta:
         proxy = True
+
+
+class OtpCode(CreateModel):
+    code = models.PositiveSmallIntegerField()
+    time_validity = models.TimeField()
+
+    class Meta:
+        db_table = 'otp_code'
+        verbose_name = _('otp code')
+        verbose_name_plural = _('otp codes')

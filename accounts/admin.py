@@ -1,5 +1,5 @@
 from django.contrib import admin
-from accounts.models import User, UserDeleted
+from accounts.models import User, UserDeleted, OtpCode
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
@@ -62,3 +62,8 @@ class UserDeletedAdmin(admin.ModelAdmin):
     @admin.action(description='recovery user')
     def recovery_user(modeladmin, request, queryset):
         queryset.update(is_deleted=False, deleted_at=None)
+
+
+@admin.register(OtpCode)
+class OtpCodeAdmin(admin.ModelAdmin):
+    pass
