@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     # my app
     "sms.apps.SmsConfig",
     "accounts.apps.AccountsConfig",
-    "core.apps.CoreConfig"
+    "core.apps.CoreConfig",
+
+    # install
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
