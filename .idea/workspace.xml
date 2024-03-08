@@ -5,22 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="116e2c1d-11a4-440d-8447-d489f62a27d0" name="Changes" comment=".">
-      <change afterPath="$PROJECT_DIR$/accounts/migrations/0002_alter_user_date_joined.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/genrate_otp_code.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/managers.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/managers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/migrations/0002_alter_user_username.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/migrations/0003_otpcode.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/migrations/0004_alter_otpcode_time_validity.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/serializers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/send_sms/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/send_sms/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/send_sms/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/send_sms/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0002_alter_user_date_joined.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/sms/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/sms/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sms/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sms/migrations/0002_alter_uploadfilemodel_execl_file.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/sms/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sms/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -194,7 +184,7 @@
       <workItem from="1709575988412" duration="677000" />
       <workItem from="1709608520760" duration="1768000" />
       <workItem from="1709834853948" duration="6775000" />
-      <workItem from="1709915386800" duration="10780000" />
+      <workItem from="1709915386800" duration="13929000" />
     </task>
     <task id="LOCAL-00001" summary="add project in branch master">
       <option name="closed" value="true" />
@@ -252,7 +242,23 @@
       <option name="project" value="LOCAL" />
       <updated>1709576064077</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="add model UploadFile and SendSms in app sms">
+      <option name="closed" value="true" />
+      <created>1709927025766</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1709927025766</updated>
+    </task>
+    <task id="LOCAL-00009" summary=".">
+      <option name="closed" value="true" />
+      <created>1709927036464</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1709927036464</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -265,6 +271,7 @@
     <MESSAGE value="create user api in app accounts" />
     <MESSAGE value="add urls accounts" />
     <MESSAGE value="add token jwt in project" />
+    <MESSAGE value="add model UploadFile and SendSms in app sms" />
     <MESSAGE value="." />
     <option name="LAST_COMMIT_MESSAGE" value="." />
   </component>
