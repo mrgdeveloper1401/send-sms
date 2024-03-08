@@ -2,6 +2,7 @@ from django.contrib import admin
 from accounts.models import User, UserDeleted, OtpCode
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django_jalali.admin.filters import JDateFieldListFilter
 
 
 @admin.register(User)
@@ -23,7 +24,7 @@ class UserAdmin(BaseUserAdmin):
                 ),
             },
         ),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (_("Important dates"), {"fields": ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
         (
@@ -34,15 +35,20 @@ class UserAdmin(BaseUserAdmin):
             },
         ),
     )
-    list_display = ('mobile_phone', "username", "email", "first_name", "last_name", "is_staff", 'is_active',
+    list_display = ('mobile_phone', "username", "email", "first_name", "last_name", "is_staff", 'is_superuser',
+                    'is_active',
                     'is_deleted')
-    list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+    list_filter = ("is_staff", "is_superuser", "is_active", "groups",
+                   ('date_joined', JDateFieldListFilter))
     search_fields = ("username", "first_name", "last_name", "email")
     ordering = ("username",)
     filter_horizontal = (
         "groups",
         "user_permissions",
     )
+    list_display_links = ('mobile_phone', 'username', 'email')
+    readonly_fields = ('date_joined', 'last_login')
+    date_hierarchy = 'date_joined'
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)

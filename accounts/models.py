@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.utils.timezone import now
 from django_jalali.db import models as jmodels
 from accounts.managers import UserManager
 from core.models import SoftDeleteModel, CreateModel, UpdateModel
@@ -9,11 +10,16 @@ from core.models import SoftDeleteModel, CreateModel, UpdateModel
 class User(AbstractUser, SoftDeleteModel):
     mobile_phone = models.CharField(max_length=15, unique=True)
     email = models.EmailField(unique=True, max_length=255, blank=True, null=True)
+    date_joined = jmodels.jDateTimeField(blank=True, null=True, default=now())
+    last_login = jmodels.jDateTimeField(blank=True, null=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'mobile_phone'
     REQUIRED_FIELDS = ('username',)
+
+    def __str__(self):
+        return f'{self.mobile_phone} -- {self.username} -- {self.email}'
 
     class Meta:
         db_table = 'user'
