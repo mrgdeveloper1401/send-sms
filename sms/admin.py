@@ -10,16 +10,16 @@ class UploadFileModelAdmin(admin.ModelAdmin):
 
 @admin.register(SendSingleMessageModel)
 class SendSmsModelAdmin(admin.ModelAdmin):
-    list_display = ('from_user', 'foreignkey_mobile_phone', 'created_at', 'is_active')
-    list_filter = ('created_at', 'is_active')
+    list_display = ('from_user', 'foreignkey_mobile_phone', 'created_at')
+    list_filter = ('created_at', )
     list_per_page = 20
     date_hierarchy = 'created_at'
-    list_editable = ('is_active',)
 
 
 @admin.register(SendMultiplesMessageModel)
-class SendSmsModelAdmin(admin.ModelAdmin):
-    filter_horizontal = ('m2m_mobile_phone',)
+class SendMultipleSmsAdmin(admin.ModelAdmin):
+    filter_horizontal = ('mobile_phones', )
+    list_display = ('all_number', )
 
 
 @admin.register(PhoneBookModel)
