@@ -112,21 +112,21 @@ class SendSingleMessageModel(CreateModel):
 class SendMultiplesMessageModel(CreateModel, UpdateModel):
     from_user = models.ForeignKey(verbose_name='از کاربر', to='accounts.User', on_delete=models.PROTECT,
                                   related_name='sender_multiple_sms', limit_choices_to={'is_superuser': True})
-    m2m_mobile_phone = models.ManyToManyField(PhoneBookModel, related_name='m2m_mobile_phones', )
+    m2m_mobile_phone = models.ManyToManyField(PhoneBookModel, related_name='m2m_mobile_phones')
     message_body = models.TextField(_('متن پیام'))
     is_active = models.BooleanField(default=True)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        url = 'https://api.limosms.com/api/sendsms'
-        receptor = [phones.mobile_phone for phones in self.m2m_mobile_phone.all()]
-        data = {
-            'Message': self.message_body,
-            'SenderNumber': self.from_user.mobile_phone,
-            'MobileNumber': receptor
-        }
-        sms_send = requests.post(url, json=data, headers={'ApiKey': 'c28b1f09-67b4-4728-a3c4-5352fee0b32d'})
-        print(sms_send.text)
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     url = 'https://api.limosms.com/api/sendsms'
+    #     receptor = [p.mobile_phone for p in self.m2m_mobile_phone.all()]
+    #     data = {
+    #         'Message': self.message_body,
+    #         'SenderNumber': self.from_user.mobile_phone,
+    #         'MobileNumber': receptor
+    #     }
+    #     sms_send = requests.post(url, json=data, headers={'ApiKey': 'c28b1f09-67b4-4728-a3c4-5352fee0b32d'})
+    #     print(sms_send.text)
 
     class Meta:
         db_table = 'send_multiple_messages'

@@ -1,19 +1,21 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver, Signal, dispatcher
-from sms.models import SendSingleMessageModel
+from sms.models import SendMultiplesMessageModel
 import requests
 
 
-@receiver(post_save, sender=SendSingleMessageModel)
-def send_sms(sender, instance, created, **kwargs):
+@receiver(post_save, sender=SendMultiplesMessageModel)
+def send_sms_multiple_phone(sender, instance, created, **kwargs):
     if created:
         url = 'https://api.limosms.com/api/sendsms'
-        rec = str(instance.to_mobile_phone)
-        receptor = [rec]
-        myobj = {
+        receptor = [p.mobile_phone for p in instance.m2m_mobile_phone.all()]
+        data = {
             'Message': instance.message_body,
-            'MobileNumber': receptor,
-            'SenderNumber': instance.from_user
+            'SenderNumber': instance.from_user.mobile_phone,
+            'MobileNumber': receptor
         }
-        x = requests.post(url, myobj, headers={'ApiKey': 'c28b1f09-67b4-4728-a3c4-5352fee0b32d'})
-        print(x.text)
+        send_data = requests.post(url, json=data, headers={'ApiKey': 'c28b1f09-67b4-4728-a3c4-5352fee0b32d'})
+        print(send_data.text)
+
+
+
