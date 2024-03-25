@@ -4,14 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="116e2c1d-11a4-440d-8447-d489f62a27d0" name="Changes" comment=".">
-      <change afterPath="$PROJECT_DIR$/accounts/migrations/0003_user_phone_is_census_alter_user_date_joined.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sms/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/sms/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sms/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sms/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sms/read_excel.py" beforeDir="false" />
+    <list default="true" id="116e2c1d-11a4-440d-8447-d489f62a27d0" name="Changes" comment="add api panel limo sms in project">
+      <change afterPath="$PROJECT_DIR$/accounts/migrations/0002_alter_user_date_joined.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sms/migrations/0004_remove_sendsinglemessagemodel_to_mobile_phone_and_more.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sms/migrations/0005_remove_sendmultiplesmessagemodel_send_time_and_more.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sms/migrations/0006_alter_sendmultiplesmessagemodel_m2m_mobile_phone.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,42 +52,47 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2dBmn9Ww6roeUOJyo8mzI0x0jnq" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Django Server.send_sms.executor": "Run",
-    "Python.limoo_sms.executor": "Debug",
-    "Python.read_excel.executor": "Run",
-    "Python.serializers.executor": "Run",
-    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/home/mohammadgoodarzi/Desktop/project-django/send_sms/sms",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "terminal",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;Django Server.send_sms.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.limoo_sms.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.models.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.read_excel.executor&quot;: &quot;Run&quot;,
+    &quot;Python.serializers.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/mohammadgoodarzi/Desktop/project-django/send_sms/sms&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/sms" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
   </component>
-  <component name="RunManager" selected="Python.limoo_sms">
+  <component name="RunManager" selected="Django Server.send_sms">
     <configuration name="limoo_sms" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="send_sms" />
       <option name="ENV_FILES" value="" />
@@ -106,6 +108,29 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/sms/limoo_sms.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="models" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="send_sms" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/sms" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/sms/models.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -187,6 +212,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.models" />
         <item itemvalue="Python.limoo_sms" />
         <item itemvalue="Python.read_excel" />
         <item itemvalue="Python.serializers" />
@@ -215,6 +241,7 @@
       <workItem from="1709915386800" duration="13929000" />
       <workItem from="1710044521781" duration="3572000" />
       <workItem from="1710090317364" duration="6447000" />
+      <workItem from="1711307562950" duration="10670000" />
     </task>
     <task id="LOCAL-00001" summary="add project in branch master">
       <option name="closed" value="true" />
@@ -288,7 +315,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709927036464</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="add api panel limo sms in project">
+      <option name="closed" value="true" />
+      <created>1711319071599</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1711319071599</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -303,7 +338,8 @@
     <MESSAGE value="add token jwt in project" />
     <MESSAGE value="add model UploadFile and SendSms in app sms" />
     <MESSAGE value="." />
-    <option name="LAST_COMMIT_MESSAGE" value="." />
+    <MESSAGE value="add api panel limo sms in project" />
+    <option name="LAST_COMMIT_MESSAGE" value="add api panel limo sms in project" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -312,12 +348,18 @@
           <url>file://$PROJECT_DIR$/sms/admin.py</url>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/sms/models.py</url>
+          <line>121</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/send_sms$read_excel.coverage" NAME="read_excel Coverage Results" MODIFIED="1709925368843" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sms" />
+    <SUITE FILE_PATH="coverage/send_sms$models.coverage" NAME="models Coverage Results" MODIFIED="1711321152345" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sms" />
     <SUITE FILE_PATH="coverage/send_sms$serializers.coverage" NAME="serializers Coverage Results" MODIFIED="1709507626374" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/accounts" />
-    <SUITE FILE_PATH="coverage/send_sms$limoo_sms.coverage" NAME="limoo_sms Coverage Results" MODIFIED="1710098717069" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sms" />
+    <SUITE FILE_PATH="coverage/send_sms$limoo_sms.coverage" NAME="limoo_sms Coverage Results" MODIFIED="1711321115514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/sms" />
   </component>
 </project>
