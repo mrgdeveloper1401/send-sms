@@ -9,7 +9,6 @@ from core.models import SoftDeleteModel, CreateModel, UpdateModel
 
 class User(AbstractUser, SoftDeleteModel):
     mobile_phone = models.CharField(max_length=15, unique=True)
-    email = models.EmailField(unique=True, max_length=255, blank=True, null=True)
     date_joined = jmodels.jDateTimeField(blank=True, null=True, default=now())
     last_login = jmodels.jDateTimeField(blank=True, null=True)
 

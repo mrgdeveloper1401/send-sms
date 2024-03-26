@@ -90,18 +90,6 @@ class SendSingleMessageModel(CreateModel):
                                                 verbose_name=_('انتخاب شماره موبایل'))
     message_body = models.TextField(_('متن پیام'))
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        url = 'https://api.limosms.com/api/sendsms'
-        receptor = [self.foreignkey_mobile_phone.mobile_phone]
-        data = {
-            'Message': self.message_body,
-            'SenderNumber': self.from_user.mobile_phone,
-            'MobileNumber': receptor
-        }
-        sms_send = requests.post(url, json=data, headers={'ApiKey': 'c28b1f09-67b4-4728-a3c4-5352fee0b32d'})
-        print(sms_send.text)
-
     class Meta:
         db_table = 'send_sms'
         verbose_name = _('send single sms')
@@ -113,18 +101,6 @@ class SendMultiplesMessageModel(CreateModel, UpdateModel):
                                   related_name='sender_multiple_sms', limit_choices_to={'is_superuser': True})
     mobile_phones = models.ManyToManyField(PhoneBookModel, related_name='m2m_mobile_phones')
     message_body = models.TextField(_('متن پیام'))
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        url = 'https://api.limosms.com/api/sendsms'
-        receptor = self.all_number
-        data = {
-            'Message': self.message_body,
-            'SenderNumber': self.from_user.mobile_phone,
-            'MobileNumber': receptor
-        }
-        sms_send = requests.post(url, json=data, headers={'ApiKey': 'c28b1f09-67b4-4728-a3c4-5352fee0b32d'})
-        print(sms_send.text)
 
     @property
     def all_number(self):
