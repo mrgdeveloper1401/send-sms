@@ -1,14 +1,12 @@
+import os
+
 import jdatetime
-import pandas
 from django.db import models
 from core.models import UpdateModel, CreateModel
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import FileExtensionValidator
-from django_jalali.db import models as django_jalali_models
 import pandas as pd
-import openpyxl as opx
-import requests
+from kavenegar import *
 
 
 class UploadFileModel(CreateModel, UpdateModel):
@@ -134,7 +132,31 @@ class UploadFileModel(CreateModel, UpdateModel):
 
     def send_sms_birthday(self):
         trustees_today = self.show_specified_birhday
-        return trustees_today
+        mobile = []
+        for m in trustees_today:
+            mobile.append(m['شماه همراه'])
+        full_name = []
+        for f in trustees_today:
+            full_name.append(f['نام و نام خوانوادگی'])
+        combined_list = list(zip(full_name, mobile))
+        while len(combined_list) > 0:
+            full_name, mobile = combined_list.pop(0)
+            try:
+                api_key = os.environ.get('API_KEY')
+                api = KavenegarAPI(api_key)
+                params = {
+                    'sender': '',  # optional
+                    'receptor': mobile,  # multiple mobile number, split by comma
+                    'message': f'کاربر {full_name} تولدتان مبارک باد',
+                }
+                response = api.sms_send(params)
+                print(response)
+            except APIException as e:
+                print(e)
+            except HTTPException as e:
+                print(e)
+
+
 
 
 class PhoneBookModel(CreateModel, UpdateModel):
