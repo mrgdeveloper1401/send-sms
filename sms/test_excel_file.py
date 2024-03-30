@@ -1,4 +1,5 @@
 import datetime
+from datetime import timedelta
 import os.path
 import pandas as pd
 import numpy as np
@@ -68,14 +69,23 @@ mohammad_birthday = datetime.date(year=2001, month=1, day=1)
 # else:
 #     print('not happy birthday')
 
-birthday = excel_file['birthday']
-counter = 0
-for b in birthday:
-    if mohammad_birthday.month == b.month and mohammad_birthday.day == b.day:
-        print(f'today is {b} and happy birthday')
-        counter += 1
-    else:
-        print(f'today is {b} is not happy birthday')
+# birthday = excel_file['birthday']
+# counter = 0
+# for b in birthday:
+#     if mohammad_birthday.month == b.month and mohammad_birthday.day == b.day:
+#         print(f'today is {b} and happy birthday')
+#         counter += 1
+#     else:
+#         print(f'today is {b} is not happy birthday')
+#
+#
+# print(excel_file.loc[counter - 1])
 
 
-print(excel_file.loc[counter - 1])
+today = datetime.date.today()
+print(today)
+
+five_days_ago = today - timedelta(days=5)
+print(five_days_ago)
+print(five_days_ago.month)
+print(five_days_ago.day)

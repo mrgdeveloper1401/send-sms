@@ -1,5 +1,3 @@
-import datetime
-
 import jdatetime
 import pandas
 from django.db import models
@@ -32,53 +30,111 @@ class UploadFileModel(CreateModel, UpdateModel):
 
     @property
     def get_full_name(self):
-        full_name = self.read_excel_file.loc[0:]['full_name']
+        full_name = self.read_excel_file.loc[0:]['نام و نام خوانوادگی']
         return full_name
 
     @property
     def get_mobile_phone(self):
-        mobile_phone = self.read_excel_file.loc[0:]['mobile_phone']
+        mobile_phone = self.read_excel_file.loc[0:]['شماره همراه']
         return mobile_phone
 
     @property
     def get_birthday(self):
-        birthday = self.read_excel_file.loc[0:]['birthday']
+        birthday = self.read_excel_file.loc[0:]['تاریخ تولد']
         return birthday
 
     @property
     def get_contract(self):
-        contract = self.read_excel_file.loc[0:]['contract']
+        contract = self.read_excel_file.loc[0:]['قرارداد']
         return contract
 
     @property
     def get_third_party_insurance(self):
-        third_party_insurance = self.read_excel_file.loc[0:]['third_party_insurance']
+        third_party_insurance = self.read_excel_file.loc[0:]['بیمه شخص ثالث']
         return third_party_insurance
 
     @property
     def get_rental_insurance(self):
-        rental_insurance = self.read_excel_file.loc[0:]['rental_insurance']
+        rental_insurance = self.read_excel_file.loc[0:]['بیمه کرایه ای']
         return rental_insurance
 
     @property
     def get_technical_diagnoses(self):
-        technical_diagnoses = self.read_excel_file.loc[0:]['technical_diagnoses']
+        technical_diagnoses = self.read_excel_file.loc[0:]['معاینه فنی']
         return technical_diagnoses
 
-
-    def specified_birhday(self):
-        today = datetime.date(year=2000, month=1, day=1)
+    @property
+    def show_specified_birhday(self):
+        today = jdatetime.date.today()
         counter = 0
         birthday = self.get_birthday
+        birthday_list = []
         for b in birthday:
+            counter += 1
             if today.month == b.month and today.day == b.day:
-                counter += 1
                 show_user = self.read_excel_file.loc[counter - 1]
-                return show_user
-            else:
-                counter = 0
+                birthday_list.append(show_user)
+        return birthday_list
 
+    @property
+    def show_specified_contract(self):
+        today = jdatetime.date.today()
+        five_days_ago = today - jdatetime.timedelta(days=5)
+        counter = 0
+        contract = self.get_contract
+        contract_list = []
+        for c in contract:
+            counter += 1
+            if five_days_ago.month == c.month and five_days_ago.day == c.day:
+                show_user = self.read_excel_file.loc[counter - 1]
+                contract_list.append(show_user)
+        return contract_list
 
+    @property
+    def show_specified_third_party_insurance(self):
+        today = jdatetime.date.today()
+        five_days_ago = today - jdatetime.timedelta(days=5)
+        counter = 0
+        third_party_insurance_list = []
+        third_party_insurance = self.get_third_party_insurance
+        for t in third_party_insurance:
+            counter += 1
+            if five_days_ago.month == t.month and five_days_ago.day == t.day:
+                show_user = self.read_excel_file.loc[counter - 1]
+                third_party_insurance_list.append(show_user)
+        return third_party_insurance_list
+
+    @property
+    def show_rental_insurance(self):
+        today = jdatetime.date.today()
+        five_days_ago = today - jdatetime.timedelta(days=5)
+        counter = 0
+        rental_insurance_list = []
+        rental_insurance = self.get_rental_insurance
+        for r in rental_insurance:
+            counter += 1
+            if five_days_ago.month == r.month and five_days_ago.day == r.day:
+                show_user = self.read_excel_file.loc[counter - 1]
+                rental_insurance_list.append(show_user)
+        return rental_insurance_list
+
+    @property
+    def show_technical_diagnoses(self):
+        today = jdatetime.date.today()
+        five_days_ago = today - jdatetime.timedelta(days=5)
+        counter = 0
+        technical_diagnose_list = []
+        technical_diagnose = self.get_technical_diagnoses
+        for t in technical_diagnose:
+            counter += 1
+            if five_days_ago.month == t.month and five_days_ago.day == t.day:
+                show_user = self.read_excel_file.loc[counter - 1]
+                technical_diagnose_list.append(show_user)
+        return technical_diagnose_list
+
+    def send_sms_birthday(self):
+        trustees_today = self.show_specified_birhday
+        return trustees_today
 
 
 class PhoneBookModel(CreateModel, UpdateModel):
