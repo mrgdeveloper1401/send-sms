@@ -1,8 +1,9 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver, Signal, dispatcher
-from sms.models import SendMultiplesMessageModel, SendSingleMessageModel
+from sms.models import SendMultiplesMessageModel, SendSingleMessageModel, UploadFileModel
 from kavenegar import *
 import requests
+import jdatetime
 
 
 # api sms negar
@@ -77,4 +78,7 @@ def send_single_sms_kavenegar(sender, instance, created, **kwargs):
             print(str(e))
 
 
-
+@receiver(post_save, sender=UploadFileModel)
+def send_sms_birthday_kavenegar(sender, instance, created, **kwargs):
+    if created:
+        today = jdatetime.date.today()

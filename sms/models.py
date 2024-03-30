@@ -1,3 +1,6 @@
+import datetime
+
+import jdatetime
 import pandas
 from django.db import models
 from core.models import UpdateModel, CreateModel
@@ -6,13 +9,14 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import FileExtensionValidator
 from django_jalali.db import models as django_jalali_models
 import pandas as pd
+import openpyxl as opx
 import requests
 
 
 class UploadFileModel(CreateModel, UpdateModel):
     execl_file = models.FileField(
         upload_to='execl_files/%y/%m/%d',
-        validators=[FileExtensionValidator(allowed_extensions=['xls', 'xlsx'])]
+        validators=[FileExtensionValidator(allowed_extensions=['xls', 'xlsx', 'ods'])]
     )
     alt = models.TextField(_('توضیحی در مورد فایل'), blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -21,46 +25,60 @@ class UploadFileModel(CreateModel, UpdateModel):
         return f'{self.alt} -- {self.id}'
 
     @property
-    def mobile_phone(self):
-        read_excel_file = self.execl_file
-        pandas_excel_file = pd.read_excel(read_excel_file)
-        mobile_phone = pandas_excel_file['mobile_phone']
+    def read_excel_file(self):
+        f = self.execl_file
+        read_excel_file = pd.read_excel(f)
+        return read_excel_file
+
+    @property
+    def get_full_name(self):
+        full_name = self.read_excel_file.loc[0:]['full_name']
+        return full_name
+
+    @property
+    def get_mobile_phone(self):
+        mobile_phone = self.read_excel_file.loc[0:]['mobile_phone']
         return mobile_phone
 
     @property
-    def birth_day(self):
-        read_excel_file = self.execl_file
-        pandas_excel_file = pd.read_excel(read_excel_file)
-        birth_day = pandas_excel_file['birthday']
-        return birth_day
+    def get_birthday(self):
+        birthday = self.read_excel_file.loc[0:]['birthday']
+        return birthday
 
     @property
-    def contract(self):
-        read_excel_file = self.execl_file
-        pandas_excel_file = pd.read_excel(read_excel_file)
-        contract = pandas_excel_file['contract']
+    def get_contract(self):
+        contract = self.read_excel_file.loc[0:]['contract']
         return contract
 
     @property
-    def third_party_insurance(self):
-        read_excel_file = self.execl_file
-        pandas_excel_file = pd.read_excel(read_excel_file)
-        third_party_insurance = pandas_excel_file['Third_party_insurance']
+    def get_third_party_insurance(self):
+        third_party_insurance = self.read_excel_file.loc[0:]['third_party_insurance']
         return third_party_insurance
 
     @property
-    def rental_insurance(self):
-        read_excel_file = self.execl_file
-        pandas_excel_file = pd.read_excel(read_excel_file)
-        rental_insurance = pandas_excel_file['rental_insurance']
+    def get_rental_insurance(self):
+        rental_insurance = self.read_excel_file.loc[0:]['rental_insurance']
         return rental_insurance
 
     @property
-    def technical_diagnosis(self):
-        read_excel_file = self.execl_file
-        pandas_excel_file = pd.read_excel(read_excel_file)
-        technical_diagnosis = pandas_excel_file['technical_diagnosis']
-        return technical_diagnosis
+    def get_technical_diagnoses(self):
+        technical_diagnoses = self.read_excel_file.loc[0:]['technical_diagnoses']
+        return technical_diagnoses
+
+
+    def specified_birhday(self):
+        today = datetime.date(year=2000, month=1, day=1)
+        counter = 0
+        birthday = self.get_birthday
+        for b in birthday:
+            if today.month == b.month and today.day == b.day:
+                counter += 1
+                show_user = self.read_excel_file.loc[counter - 1]
+                return show_user
+            else:
+                counter = 0
+
+
 
 
 class PhoneBookModel(CreateModel, UpdateModel):
