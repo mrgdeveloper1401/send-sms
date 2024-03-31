@@ -19,7 +19,7 @@ class SendSmsModelAdmin(admin.ModelAdmin):
 @admin.register(SendMultiplesMessageModel)
 class SendMultipleSmsAdmin(admin.ModelAdmin):
     filter_horizontal = ('mobile_phones', )
-    list_display = ('all_number', )
+    # list_display = ('all_number', )
 
 
 @admin.register(PhoneBookModel)

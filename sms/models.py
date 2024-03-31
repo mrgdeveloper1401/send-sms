@@ -1,4 +1,5 @@
 import os
+from enum import property
 
 import jdatetime
 from django.db import models
@@ -77,13 +78,13 @@ class UploadFileModel(CreateModel, UpdateModel):
     @property
     def show_specified_contract(self):
         today = jdatetime.date.today()
-        five_days_ago = today - jdatetime.timedelta(days=5)
+        five_days_later = today + jdatetime.timedelta(days=5)
         counter = 0
         contract = self.get_contract
         contract_list = []
         for c in contract:
             counter += 1
-            if five_days_ago.month == c.month and five_days_ago.day == c.day:
+            if five_days_later.year == c.year and five_days_later.month == c.month and five_days_later.day == c.day:
                 show_user = self.read_excel_file.loc[counter - 1]
                 contract_list.append(show_user)
         return contract_list
@@ -91,13 +92,13 @@ class UploadFileModel(CreateModel, UpdateModel):
     @property
     def show_specified_third_party_insurance(self):
         today = jdatetime.date.today()
-        five_days_ago = today - jdatetime.timedelta(days=5)
+        five_days_later = today + jdatetime.timedelta(days=5)
         counter = 0
         third_party_insurance_list = []
         third_party_insurance = self.get_third_party_insurance
         for t in third_party_insurance:
             counter += 1
-            if five_days_ago.month == t.month and five_days_ago.day == t.day:
+            if five_days_later.year == t.year and five_days_later.month == t.month and five_days_later.day == t.day:
                 show_user = self.read_excel_file.loc[counter - 1]
                 third_party_insurance_list.append(show_user)
         return third_party_insurance_list
@@ -105,13 +106,13 @@ class UploadFileModel(CreateModel, UpdateModel):
     @property
     def show_rental_insurance(self):
         today = jdatetime.date.today()
-        five_days_ago = today - jdatetime.timedelta(days=5)
+        five_days_later = today + jdatetime.timedelta(days=5)
         counter = 0
         rental_insurance_list = []
         rental_insurance = self.get_rental_insurance
         for r in rental_insurance:
             counter += 1
-            if five_days_ago.month == r.month and five_days_ago.day == r.day:
+            if five_days_later.year == r.year and five_days_later.month == r.month and five_days_later.day == r.day:
                 show_user = self.read_excel_file.loc[counter - 1]
                 rental_insurance_list.append(show_user)
         return rental_insurance_list
@@ -119,26 +120,26 @@ class UploadFileModel(CreateModel, UpdateModel):
     @property
     def show_technical_diagnoses(self):
         today = jdatetime.date.today()
-        five_days_ago = today - jdatetime.timedelta(days=5)
+        five_days_later = today + jdatetime.timedelta(days=5)
         counter = 0
         technical_diagnose_list = []
         technical_diagnose = self.get_technical_diagnoses
         for t in technical_diagnose:
             counter += 1
-            if five_days_ago.month == t.month and five_days_ago.day == t.day:
+            if five_days_later.year == t.year and five_days_later.month == t.month and five_days_later.day == t.day:
                 show_user = self.read_excel_file.loc[counter - 1]
                 technical_diagnose_list.append(show_user)
         return technical_diagnose_list
 
+    @property
     def send_sms_birthday(self):
         trustees_today = self.show_specified_birhday
-        mobile = []
-        for m in trustees_today:
-            mobile.append(m['شماه همراه'])
-        full_name = []
-        for f in trustees_today:
-            full_name.append(f['نام و نام خوانوادگی'])
-        combined_list = list(zip(full_name, mobile))
+        combined_list = []
+        for trustee in trustees_today:
+            full_name = trustee['نام و نام خوانوادگی']
+            mobile = trustee['شماره همراه']
+            combined_list.append((full_name, mobile))
+
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
             try:
@@ -156,7 +157,103 @@ class UploadFileModel(CreateModel, UpdateModel):
             except HTTPException as e:
                 print(e)
 
+    @property
+    def send_sms_contract(self):
+        combined_list = []
+        for contract in self.show_specified_contract:
+            full_name = contract['نام و نام خوانوادگی']
+            mobiles = contract['شماره همراه']
+            combined_list.append((full_name, mobiles))
 
+        while len(combined_list) > 0:
+            full_name, mobiles = combined_list.pop(0)
+            try:
+                api_key = os.environ.get('API_KEY')
+                api = KavenegarAPI(api_key)
+                params = {
+                    'sender': '',  # optional
+                    'receptor': mobiles,  # multiple mobile number, split by comma
+                    'message': f'کاربر {full_name} تا قرار دادتان 5 روز باقی مانده هست',
+                }
+                response = api.sms_send(params)
+                print(response)
+            except APIException as e:
+                print(e)
+            except HTTPException as e:
+                print(e)
+
+    @property
+    def send_sms_third_party_insurance(self):
+        combined_list = []
+        for tpi in self.show_specified_third_party_insurance:
+            full_name = tpi['نام و نام خوانوادگی']
+            mobiles = tpi['شماره همراه']
+            combined_list.append(full_name, mobiles)
+
+        while len(combined_list) > 0:
+            full_name, mobiles = combined_list.pop(0)
+            try:
+                api_key = os.environ.get('API_KEY')
+                api = KavenegarAPI(api_key)
+                params = {
+                    'sender': '',  # optional
+                    'receptor': mobiles,  # multiple mobile number, split by comma
+                    'message': f'کاربر {full_name} تا بیمه شخص ثالث تان 5 روز باقی مانده هست',
+                }
+                response = api.sms_send(params)
+                print(response)
+            except APIException as e:
+                print(e)
+            except HTTPException as e:
+                print(e)
+
+    @property
+    def send_sms_rentual_insurance(self):
+        combined_list = []
+        for ri in self.show_rental_insurance:
+            full_name = ri['نام و نام خوانوادگی']
+            mobiles = ri['شماره همراه']
+            combined_list.append(full_name, mobiles)
+        while len(combined_list) > 0:
+            full_name, mobiles = combined_list.pop(0)
+            try:
+                api_key = os.environ.get('API_KEY')
+                api = KavenegarAPI(api_key)
+                params = {
+                    'sender': '',  # optional
+                    'receptor': mobiles,  # multiple mobile number, split by comma
+                    'message': f'کاربر {full_name} تا بیمه کرایه تان تان 5 روز باقی مانده هست',
+                }
+                response = api.sms_send(params)
+                print(response)
+            except APIException as e:
+                print(e)
+            except HTTPException as e:
+                print(e)
+
+    @property
+    def send_sms_technical_diagnoses(self):
+        combined_list = []
+        for td in self.show_technical_diagnoses:
+            full_name = td['نام و نام خوانوادگی']
+            mobile = td['شماره همراه']
+            combined_list.append((full_name, mobile))
+        while len(combined_list) > 0:
+            full_name, mobiles = combined_list.pop(0)
+            try:
+                api_key = os.environ.get('API_KEY')
+                api = KavenegarAPI(api_key)
+                params = {
+                    'sender': '',  # optional
+                    'receptor': mobiles,  # multiple mobile number, split by comma
+                    'message': f'کاربر {full_name} تا بیمه کرایه تان تان 5 روز باقی مانده هست',
+                }
+                response = api.sms_send(params)
+                print(response)
+            except APIException as e:
+                print(e)
+            except HTTPException as e:
+                print(e)
 
 
 class PhoneBookModel(CreateModel, UpdateModel):
