@@ -63,7 +63,7 @@ class UploadFileModel(CreateModel, UpdateModel):
         return technical_diagnoses
 
     @property
-    def show_specified_birhday(self):
+    def show_specified_birthday(self):
         today = jdatetime.date.today()
         counter = 0
         birthday = self.get_birthday
@@ -90,148 +90,108 @@ class UploadFileModel(CreateModel, UpdateModel):
         return contract_list
 
     @property
-    def show_specified_third_party_insurance(self):
+    def five_days_later(self):
         today = jdatetime.date.today()
         five_days_later = today + jdatetime.timedelta(days=5)
+        return five_days_later
+
+    @property
+    def show_specified_third_party_insurance(self):
         counter = 0
         third_party_insurance_list = []
         third_party_insurance = self.get_third_party_insurance
         for t in third_party_insurance:
             counter += 1
-            if five_days_later.year == t.year and five_days_later.month == t.month and five_days_later.day == t.day:
+            if (self.five_days_later.year == t.year and self.five_days_later.month == t.month and
+                    self.five_days_later.day == t.day):
                 show_user = self.read_excel_file.loc[counter - 1]
                 third_party_insurance_list.append(show_user)
         return third_party_insurance_list
 
     @property
     def show_rental_insurance(self):
-        today = jdatetime.date.today()
-        five_days_later = today + jdatetime.timedelta(days=5)
         counter = 0
         rental_insurance_list = []
         rental_insurance = self.get_rental_insurance
         for r in rental_insurance:
             counter += 1
-            if five_days_later.year == r.year and five_days_later.month == r.month and five_days_later.day == r.day:
+            if (self.five_days_later.year == r.year and self.five_days_later.month == r.month
+                    and self.five_days_later.day == r.day):
                 show_user = self.read_excel_file.loc[counter - 1]
                 rental_insurance_list.append(show_user)
         return rental_insurance_list
 
     @property
     def show_technical_diagnoses(self):
-        today = jdatetime.date.today()
-        five_days_later = today + jdatetime.timedelta(days=5)
         counter = 0
         technical_diagnose_list = []
         technical_diagnose = self.get_technical_diagnoses
         for t in technical_diagnose:
             counter += 1
-            if five_days_later.year == t.year and five_days_later.month == t.month and five_days_later.day == t.day:
+            if (self.five_days_later.year == t.year and self.five_days_later.month == t.month
+                    and self.five_days_later.day == t.day):
                 show_user = self.read_excel_file.loc[counter - 1]
                 technical_diagnose_list.append(show_user)
         return technical_diagnose_list
 
-    @property
+    def send_sms(self, mobiles, message):
+        try:
+            api_key = os.environ.get('API_KEY')
+            api = KavenegarAPI(api_key)
+            params = {
+                'sender': '',
+                'receptor': mobiles,
+                'message': message,
+            }
+            response = api.sms_sendarray(params)
+            print(response)
+        except APIException as e:
+            print(e)
+        except HTTPException as e:
+            print(e)
+
     def send_sms_birthday(self):
-        trustees_today = self.show_specified_birhday
+        trustees_today = self.show_specified_birthday
         combined_list = []
         for trustee in trustees_today:
             full_name = trustee['نام و نام خوانوادگی']
             mobile = trustee['شماره همراه']
             combined_list.append((full_name, mobile))
-
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
-            try:
-                api_key = os.environ.get('API_KEY')
-                api = KavenegarAPI(api_key)
-                params = {
-                    'sender': '',  # optional
-                    'receptor': mobile,  # multiple mobile number, split by comma
-                    'message': f'کاربر {full_name} تولدتان مبارک باد',
-                }
-                response = api.sms_send(params)
-                print(response)
-            except APIException as e:
-                print(e)
-            except HTTPException as e:
-                print(e)
+            text = f'کاربر {full_name} تولدتات مبارک باد'
+            self.send_sms(mobile, full_name)
 
-    @property
     def send_sms_contract(self):
         combined_list = []
         for contract in self.show_specified_contract:
             full_name = contract['نام و نام خوانوادگی']
             mobiles = contract['شماره همراه']
             combined_list.append((full_name, mobiles))
-
         while len(combined_list) > 0:
-            full_name, mobiles = combined_list.pop(0)
-            try:
-                api_key = os.environ.get('API_KEY')
-                api = KavenegarAPI(api_key)
-                params = {
-                    'sender': '',  # optional
-                    'receptor': mobiles,  # multiple mobile number, split by comma
-                    'message': f'کاربر {full_name} تا قرار دادتان 5 روز باقی مانده هست',
-                }
-                response = api.sms_send(params)
-                print(response)
-            except APIException as e:
-                print(e)
-            except HTTPException as e:
-                print(e)
+            full_name, mobile = combined_list.pop(0)
+            self.send_sms(mobile, full_name)
 
-    @property
     def send_sms_third_party_insurance(self):
         combined_list = []
         for tpi in self.show_specified_third_party_insurance:
             full_name = tpi['نام و نام خوانوادگی']
             mobiles = tpi['شماره همراه']
-            combined_list.append(full_name, mobiles)
-
+            combined_list.append((full_name, mobiles))
         while len(combined_list) > 0:
-            full_name, mobiles = combined_list.pop(0)
-            try:
-                api_key = os.environ.get('API_KEY')
-                api = KavenegarAPI(api_key)
-                params = {
-                    'sender': '',  # optional
-                    'receptor': mobiles,  # multiple mobile number, split by comma
-                    'message': f'کاربر {full_name} تا بیمه شخص ثالث تان 5 روز باقی مانده هست',
-                }
-                response = api.sms_send(params)
-                print(response)
-            except APIException as e:
-                print(e)
-            except HTTPException as e:
-                print(e)
+            full_name, mobile = combined_list.pop(0)
+            self.send_sms(mobile, full_name)
 
-    @property
-    def send_sms_rentual_insurance(self):
+    def send_sms_rental_insurance(self):
         combined_list = []
         for ri in self.show_rental_insurance:
             full_name = ri['نام و نام خوانوادگی']
             mobiles = ri['شماره همراه']
-            combined_list.append(full_name, mobiles)
+            combined_list.append((full_name, mobiles))
         while len(combined_list) > 0:
-            full_name, mobiles = combined_list.pop(0)
-            try:
-                api_key = os.environ.get('API_KEY')
-                api = KavenegarAPI(api_key)
-                params = {
-                    'sender': '',  # optional
-                    'receptor': mobiles,  # multiple mobile number, split by comma
-                    'message': f'کاربر {full_name} تا بیمه کرایه تان تان 5 روز باقی مانده هست',
-                }
-                response = api.sms_send(params)
-                print(response)
-            except APIException as e:
-                print(e)
-            except HTTPException as e:
-                print(e)
+            full_name, mobile = combined_list.pop(0)
+            self.send_sms(mobile, full_name)
 
-    @property
     def send_sms_technical_diagnoses(self):
         combined_list = []
         for td in self.show_technical_diagnoses:
@@ -239,21 +199,8 @@ class UploadFileModel(CreateModel, UpdateModel):
             mobile = td['شماره همراه']
             combined_list.append((full_name, mobile))
         while len(combined_list) > 0:
-            full_name, mobiles = combined_list.pop(0)
-            try:
-                api_key = os.environ.get('API_KEY')
-                api = KavenegarAPI(api_key)
-                params = {
-                    'sender': '',  # optional
-                    'receptor': mobiles,  # multiple mobile number, split by comma
-                    'message': f'کاربر {full_name} تا بیمه کرایه تان تان 5 روز باقی مانده هست',
-                }
-                response = api.sms_send(params)
-                print(response)
-            except APIException as e:
-                print(e)
-            except HTTPException as e:
-                print(e)
+            full_name, mobile = combined_list.pop(0)
+            self.send_sms(mobile, full_name)
 
 
 class PhoneBookModel(CreateModel, UpdateModel):
