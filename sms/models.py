@@ -224,7 +224,9 @@ class PhoneBookModel(CreateModel, UpdateModel):
 
 class SendSingleMessageModel(CreateModel):
     from_user = models.ForeignKey(verbose_name='از کاربر', to='accounts.User', on_delete=models.PROTECT,
-                                  related_name='sender_single_sms', limit_choices_to={'is_superuser': True})
+                                  related_name='sender_single_sms', limit_choices_to={'is_superuser': True},
+                                  blank=True, null=True,
+                                  default=None)
     foreignkey_mobile_phone = models.ForeignKey(PhoneBookModel, on_delete=models.PROTECT,
                                                 related_name='foreignkey_mobile_phone',
                                                 verbose_name=_('انتخاب شماره موبایل'))
