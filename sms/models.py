@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import FileExtensionValidator
 import pandas as pd
 from kavenegar import *
+from send_sms.utils import SmsNegar
 
 
 class UploadFileModel(CreateModel, UpdateModel):
@@ -134,22 +135,7 @@ class UploadFileModel(CreateModel, UpdateModel):
                 technical_diagnose_list.append(show_user)
         return technical_diagnose_list
 
-    def send_sms(self, mobiles, message):
-        try:
-            api_key = os.environ.get('API_KEY')
-            api = KavenegarAPI(api_key)
-            params = {
-                'sender': '',
-                'receptor': mobiles,
-                'message': message,
-            }
-            response = api.sms_sendarray(params)
-            print(response)
-        except APIException as e:
-            print(e)
-        except HTTPException as e:
-            print(e)
-
+    @property
     def send_sms_birthday(self):
         trustees_today = self.show_specified_birthday
         combined_list = []
@@ -160,8 +146,10 @@ class UploadFileModel(CreateModel, UpdateModel):
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
             text = f'کاربر {full_name} تولدتات مبارک باد'
-            self.send_sms(mobile, full_name)
+            send_message = SmsNegar(text, mobile)
+            return send_message
 
+    @property
     def send_sms_contract(self):
         combined_list = []
         for contract in self.show_specified_contract:
@@ -170,8 +158,11 @@ class UploadFileModel(CreateModel, UpdateModel):
             combined_list.append((full_name, mobiles))
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
-            self.send_sms(mobile, full_name)
+            text = f'کاربر {full_name} تا قرارداتان 5 روز مانده هست'
+            send_message = SmsNegar(text, mobile)
+            return send_message
 
+    @property
     def send_sms_third_party_insurance(self):
         combined_list = []
         for tpi in self.show_specified_third_party_insurance:
@@ -180,8 +171,11 @@ class UploadFileModel(CreateModel, UpdateModel):
             combined_list.append((full_name, mobiles))
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
-            self.send_sms(mobile, full_name)
+            text = f'کاربر {full_name} تا بیمه شخص ثالثتان 5 روز مانده هست'
+            send_message = SmsNegar(text, mobile)
+            return send_message
 
+    @property
     def send_sms_rental_insurance(self):
         combined_list = []
         for ri in self.show_rental_insurance:
@@ -190,8 +184,11 @@ class UploadFileModel(CreateModel, UpdateModel):
             combined_list.append((full_name, mobiles))
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
-            self.send_sms(mobile, full_name)
+            text = f'کاربر {full_name} مدت بیمه کرایه تان 5 روز مانده هست'
+            send_message = SmsNegar(text, mobile)
+            return send_message
 
+    @property
     def send_sms_technical_diagnoses(self):
         combined_list = []
         for td in self.show_technical_diagnoses:
@@ -200,7 +197,9 @@ class UploadFileModel(CreateModel, UpdateModel):
             combined_list.append((full_name, mobile))
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
-            self.send_sms(mobile, full_name)
+            text = f'کاربر {full_name} مدت معاینه فنی شما 5 روز مانده هست'
+            send_message = SmsNegar(text, mobile)
+            return send_message
 
 
 class PhoneBookModel(CreateModel, UpdateModel):
@@ -226,10 +225,10 @@ class SendSingleMessageModel(CreateModel):
     from_user = models.ForeignKey(verbose_name='از کاربر', to='accounts.User', on_delete=models.PROTECT,
                                   related_name='sender_single_sms', limit_choices_to={'is_superuser': True},
                                   blank=True, null=True,
-                                  default=None)
-    foreignkey_mobile_phone = models.ForeignKey(PhoneBookModel, on_delete=models.PROTECT,
-                                                related_name='foreignkey_mobile_phone',
-                                                verbose_name=_('انتخاب شماره موبایل'))
+                                  default='')
+    to_user = models.ForeignKey(PhoneBookModel, on_delete=models.PROTECT,
+                                related_name='foreignkey_mobile_phone',
+                                verbose_name=_('انتخاب شماره موبایل'))
     message_body = models.TextField(_('متن پیام'))
 
     class Meta:

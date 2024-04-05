@@ -10,7 +10,7 @@ class UploadFileModelAdmin(admin.ModelAdmin):
 
 @admin.register(SendSingleMessageModel)
 class SendSmsModelAdmin(admin.ModelAdmin):
-    list_display = ('from_user', 'foreignkey_mobile_phone', 'created_at')
+    list_display = ('from_user', 'to_user', 'created_at')
     list_filter = ('created_at', )
     list_per_page = 20
     date_hierarchy = 'created_at'

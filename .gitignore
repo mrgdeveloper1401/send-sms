@@ -256,3 +256,7 @@ cython_debug/
 #folder
 image_api
 ./image_api
+
+#file
+send_sms/pannel_sms_negar.py
+./send_sms/pannel_sms_negar.py
