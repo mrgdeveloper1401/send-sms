@@ -1,6 +1,4 @@
-import os
 from enum import property
-
 import jdatetime
 from django.db import models
 from core.models import UpdateModel, CreateModel
@@ -9,8 +7,8 @@ from django.core.validators import FileExtensionValidator
 import pandas as pd
 from kavenegar import *
 from send_sms.utils import SmsNegar
-from sms.task_celery import task_send_sms_rental_insurance, task_send_sms_third_party_insurance, task_send_sms_contract, \
-    task_send_sms_technical_diagnoses, task_send_sms_birthday
+# from sms.task_celery import task_send_sms_rental_insurance, task_send_sms_third_party_insurance, \
+#     task_send_sms_contract, task_send_sms_technical_diagnoses, task_send_sms_birthday
 
 
 class UploadFileModel(CreateModel, UpdateModel):
@@ -147,7 +145,6 @@ class UploadFileModel(CreateModel, UpdateModel):
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
             text = f'کاربر {full_name} تولدتات مبارک باد'
-            task_send_sms_birthday.delay()
             send_message = SmsNegar(text, mobile)
             return send_message
 
@@ -161,7 +158,6 @@ class UploadFileModel(CreateModel, UpdateModel):
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
             text = f'کاربر {full_name} تا قرارداتان 5 روز مانده هست'
-            task_send_sms_contract.delay()
             send_message = SmsNegar(text, mobile)
             return send_message
 
@@ -175,7 +171,6 @@ class UploadFileModel(CreateModel, UpdateModel):
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
             text = f'کاربر {full_name} تا بیمه شخص ثالثتان 5 روز مانده هست'
-            task_send_sms_third_party_insurance.delay()
             send_message = SmsNegar(text, mobile)
             return send_message
 
@@ -189,7 +184,6 @@ class UploadFileModel(CreateModel, UpdateModel):
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
             text = f'کاربر {full_name} مدت بیمه کرایه تان 5 روز مانده هست'
-            task_send_sms_rental_insurance.delay()
             send_message = SmsNegar(text, mobile)
             return send_message
 
@@ -203,7 +197,6 @@ class UploadFileModel(CreateModel, UpdateModel):
         while len(combined_list) > 0:
             full_name, mobile = combined_list.pop(0)
             text = f'کاربر {full_name} مدت معاینه فنی شما 5 روز مانده هست'
-            task_send_sms_technical_diagnoses.delay()
             send_message = SmsNegar(text, mobile)
             return send_message
 

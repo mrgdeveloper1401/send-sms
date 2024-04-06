@@ -63,8 +63,7 @@ class SmsNegar:
 
     def SendSms(self):
         url = self.cDomainName + 'SendSms'
-        send_message = requests.post(url=url, json=self.json_data,
-                                     )
+        send_message = requests.post(url=url, json=self.json_data)
 
 # s1 = SmsNegar('درود وقت شما هم بخیر', '09171234567')
 # s1.SendSms()
