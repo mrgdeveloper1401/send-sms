@@ -8,17 +8,17 @@ class UploadFileModelAdmin(admin.ModelAdmin):
     list_display_links = ('created_at', 'updated_at')
 
 
-@admin.register(SendSingleMessageModel)
-class SendSmsModelAdmin(admin.ModelAdmin):
-    list_display = ('from_user', 'to_user', 'created_at')
-    list_filter = ('created_at', )
-    list_per_page = 20
-    date_hierarchy = 'created_at'
+# @admin.register(SendSingleMessageModel)
+# class SendSmsModelAdmin(admin.ModelAdmin):
+#     list_display = ('from_user', 'to_user', 'created_at')
+#     list_filter = ('created_at', )
+#     list_per_page = 20
+#     date_hierarchy = 'created_at'
 
 
-@admin.register(SendMultiplesMessageModel)
-class SendMultipleSmsAdmin(admin.ModelAdmin):
-    filter_horizontal = ('mobile_phones', )
+# @admin.register(SendMultiplesMessageModel)
+# class SendMultipleSmsAdmin(admin.ModelAdmin):
+#     filter_horizontal = ('mobile_phones', )
     # list_display = ('all_number', )
 
 
