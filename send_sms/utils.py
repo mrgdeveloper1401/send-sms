@@ -2,6 +2,7 @@ import os
 import requests
 from kavenegar import *
 from dotenv import load_dotenv
+from random import randint
 
 load_dotenv()
 
@@ -24,46 +25,32 @@ load_dotenv()
 
 
 class SmsNegar:
-    def __init__(self, smsbody, smsNumber):
-        self.username = 'tarabar.sina'
-        self.password = 'Aa123456'
-        self.smsbody = smsbody
-        self.smmNumber = smsNumber
-        self.GetId = 1
-        self.nCmessage = 1
-        self.nTypeSent = 2
-        self.m_scheuleDate = None
-        self.cDomainName = 'https://sms.smsnegar.com:443/fullrest/'
-        self.cFormNumber = None
-        self.nSpeedsms = 0
-        self.nPeriodmin = 0
-        self.cstarttime = None
-        self.cEndTime = None
+    def __init__(self, Smsbody, Mobiles):
+        self.Smsbody = Smsbody
+        self.Mobiles = Mobiles
+        self.Id = str(randint(1, 999999))
+        self.SenderNumber = '300060006060'
+        self.UserName = 'tarabar.sina'
+        self.Password = 'Aa123456'
+        self.DomainName = 'yazd'
 
     @property
     def json_data(self):
         json_data = {
-            'username': self.username,
-            'password': self.password,
-            'smsBody': self.smsbody,
-            'smsNumber': self.smmNumber,
-            'cFormNumber': self.cFormNumber,
-            'GetId': self.GetId,
-            'nCmessage': self.nCmessage,
-            'nTypeSent': self.nTypeSent,
-            'm_scheuleDate': self.m_scheuleDate,
-            'cDomainName': self.cDomainName,
-            'nSpeedsms': self.nSpeedsms,
-            'nPeriodmin': self.nPeriodmin,
-            'cstarttime': self.cstarttime,
-            'cEndTime': self.cEndTime
-
+            'Smsbody': self.Smsbody,
+            'Mobiles': [self.Mobiles],
+            'UserName': self.UserName,
+            'Password': self.Password,
+            'DomainName': self.DomainName,
+            'Id': self.Id,
+            'SenderNumber': self.SenderNumber,
         }
         return json_data
 
-    def SendSms(self):
-        url = self.cDomainName + 'SendSms'
-        send_message = requests.post(url=url, json=self.json_data)
-
-# s1 = SmsNegar('درود وقت شما هم بخیر', '09171234567')
-# s1.SendSms()
+    def send_sms(self):
+        try:
+            url = 'https://mehrafraz.com/fullrest/api/Send'
+            send_message = requests.post(url=url, json=self.json_data)
+            return send_message
+        except Exception as e:
+            print(e)

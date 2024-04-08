@@ -1,0 +1,49 @@
+#services:
+#  database:
+#    container_name: 'send_sms_database'
+#    image: postgres:latest
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWIRD: postgres
+#      POSTGRES_DB: send_sms
+#    volumes:
+#      - postgres:/var/lib/postgresql/data
+#    restart: always
+#
+#  django_app:
+#    build:
+#      context: .
+#    container_name: 'django_app'
+#    command:
+#      - sh -c:"python manage.py migrate &&
+#      - python manage.py collectstatic --no-input --clear &&
+#      - gunicorn send_sms.wsgi:application --bind 0.0.0.0:8000"
+#    volumes:
+#      - static:/usr/src/send_sms_django_app/static
+#      - media:/usr/src/send_sms_django_app/media
+#    depends_on:
+#      - databases
+#    environment:
+#      - DEBUG=False
+#      - ALLOWED_HOST=*
+#      - DATABASE-NAME=send_sms
+#      - DATABASE-USER=postgres
+#      - DATABASE-PASSWORD=postgres
+#      - DATABASE-HOST=localhost
+#
+#  nginx:
+#    container_name: 'send_sms_nginx'
+#    image: nginx:latest
+#    volumes:
+#      - ./nginx:/etc/nginx/conf.d
+#      - static:/var/wwww/static
+#      - media:/var/www/media
+#    ports:
+#      - "80:80"
+#      - "433:433"
+#      - "8443:8433"
+#
+#volumes:
+#  static:
+#  media:
+#  postgres:
