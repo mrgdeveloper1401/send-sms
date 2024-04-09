@@ -51,6 +51,6 @@ class SmsNegar:
         try:
             url = 'https://mehrafraz.com/fullrest/api/Send'
             send_message = requests.post(url=url, json=self.json_data)
-            return send_message
+            return send_message.status_code
         except Exception as e:
             print(e)

@@ -7,8 +7,6 @@ from django.core.validators import FileExtensionValidator
 import pandas as pd
 from kavenegar import *
 from send_sms.utils import SmsNegar
-# from sms.task_celery import task_send_sms_rental_insurance, task_send_sms_third_party_insurance, \
-#     task_send_sms_contract, task_send_sms_technical_diagnoses, task_send_sms_birthday
 
 
 class UploadFileModel(CreateModel, UpdateModel):
@@ -135,70 +133,65 @@ class UploadFileModel(CreateModel, UpdateModel):
                 technical_diagnose_list.append(show_user)
         return technical_diagnose_list
 
-    @property
     def send_sms_birthday(self):
         combined_list = []
         for trustee in self.show_specified_birthday:
             full_name = trustee['نام و نام خوانوادگی']
-            mobile = trustee['شماره همراه']
+            mobile = str(trustee['شماره همراه'])
             combined_list.append((full_name, mobile))
-        while len(combined_list) > 0:
-            full_name, mobile = combined_list.pop(0)
-            text = f'کاربر {full_name} تولدتات مبارک باد'
-            send_message = SmsNegar(text, mobile)
-            return send_message
+        for name, mobile in combined_list:
+            text = f'کاربر {name} تولدتان مبارک باد'
+            send_massage = SmsNegar(text, mobile)
+            send_massage.send_sms()
+            print(send_massage)
 
-    @property
     def send_sms_contract(self):
         combined_list = []
         for contract in self.show_specified_contract:
             full_name = contract['نام و نام خوانوادگی']
-            mobiles = contract['شماره همراه']
+            mobiles = str(contract['شماره همراه'])
             combined_list.append((full_name, mobiles))
-        while len(combined_list) > 0:
-            full_name, mobile = combined_list.pop(0)
-            text = f'کاربر {full_name} تا قرارداتان 5 روز مانده هست'
+        for name, mobile in combined_list:
+            text = f'کاربر گرامی {name} تا پایان قراداتان 5 روز باقی مانده هست'
             send_message = SmsNegar(text, mobile)
-            return send_message
+            send_message.send_sms()
+            print(send_message)
 
-    @property
     def send_sms_third_party_insurance(self):
         combined_list = []
         for tpi in self.show_specified_third_party_insurance:
             full_name = tpi['نام و نام خوانوادگی']
-            mobiles = tpi['شماره همراه']
+            mobiles = str(tpi['شماره همراه'])
             combined_list.append((full_name, mobiles))
-        while len(combined_list) > 0:
-            full_name, mobile = combined_list.pop(0)
-            text = f'کاربر {full_name} تا بیمه شخص ثالثتان 5 روز مانده هست'
+        for name, mobile in combined_list:
+            text = f'کاربر {name} تا بیمه شخص ثالث تان 5 روز باقی مانده هست'
             send_message = SmsNegar(text, mobile)
-            return send_message
+            send_message.send_sms()
+            print(send_message)
 
-    @property
     def send_sms_rental_insurance(self):
         combined_list = []
         for ri in self.show_rental_insurance:
             full_name = ri['نام و نام خوانوادگی']
-            mobiles = ri['شماره همراه']
+            mobiles = str(ri['شماره همراه'])
             combined_list.append((full_name, mobiles))
-        while len(combined_list) > 0:
-            full_name, mobile = combined_list.pop(0)
-            text = f'کاربر {full_name} مدت بیمه کرایه تان 5 روز مانده هست'
+        for name, mobile in combined_list:
+            text = f'کاربر {name} مدت بیمه کرایه تان 5 روز باقی مانده هست'
             send_message = SmsNegar(text, mobile)
-            return send_message
+            send_message.send_sms()
+            print(send_message)
 
-    @property
     def send_sms_technical_diagnoses(self):
         combined_list = []
         for td in self.show_technical_diagnoses:
             full_name = td['نام و نام خوانوادگی']
-            mobile = td['شماره همراه']
+            mobile = str(td['شماره همراه'])
             combined_list.append((full_name, mobile))
-        while len(combined_list) > 0:
-            full_name, mobile = combined_list.pop(0)
-            text = f'کاربر {full_name} مدت معاینه فنی شما 5 روز مانده هست'
+        for name, mobile in combined_list:
+            text = f'کاربر {name} مدت معاینه فنی شما 5 روز باقی مانده هست'
             send_message = SmsNegar(text, mobile)
-            return send_message
+            send_message.send_sms()
+            print(send_message)
 
 
 class PhoneBookModel(CreateModel, UpdateModel):
