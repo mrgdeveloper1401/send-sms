@@ -1,6 +1,5 @@
 import jdatetime
 from celery import shared_task
-from send_sms.utils import SmsNegar
 from sms.models import UploadFileModel
 
 

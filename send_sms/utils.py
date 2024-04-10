@@ -54,3 +54,13 @@ class SmsNegar:
             return send_message.status_code
         except Exception as e:
             print(e)
+
+
+def send_sms_user(user_list, message):
+    for user in user_list:
+        full_name = user['نام و نام خوانوادگی']
+        mobile = str(user['شماره همراه'])
+        text = f'کاربر {full_name} {message}'
+        send_message = SmsNegar(mobile, text)
+        send_message.send_sms()
+        print(send_message)
