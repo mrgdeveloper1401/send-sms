@@ -26,46 +26,15 @@ class UploadFileModel(CreateModel, UpdateModel):
         read_excel_file = pd.read_excel(f)
         return read_excel_file
 
-    @property
-    def get_full_name(self):
-        full_name = self.read_excel_file.loc[0:]['نام و نام خوانوادگی']
-        return full_name
-
-    @property
-    def get_mobile_phone(self):
-        mobile_phone = self.read_excel_file.loc[0:]['شماره همراه']
-        return mobile_phone
-
-    @property
-    def get_birthday(self):
-        birthday = self.read_excel_file.loc[0:]['تاریخ تولد']
-        return birthday
-
-    @property
-    def get_contract(self):
-        contract = self.read_excel_file.loc[0:]['قرارداد']
-        return contract
-
-    @property
-    def get_third_party_insurance(self):
-        third_party_insurance = self.read_excel_file.loc[0:]['بیمه شخص ثالث']
-        return third_party_insurance
-
-    @property
-    def get_rental_insurance(self):
-        rental_insurance = self.read_excel_file.loc[0:]['بیمه کرایه ای']
-        return rental_insurance
-
-    @property
-    def get_technical_diagnoses(self):
-        technical_diagnoses = self.read_excel_file.loc[0:]['معاینه فنی']
-        return technical_diagnoses
+    def get_specified_info(self, column_name):
+        info = self.read_excel_file.loc[0:][column_name]
+        return info
 
     @property
     def show_specified_birthday(self):
         today = jdatetime.date.today()
         counter = 0
-        birthday = self.get_birthday
+        birthday = self.get_specified_info('تاریخ تولد')
         birthday_list = []
         for b in birthday:
             counter += 1
@@ -74,124 +43,54 @@ class UploadFileModel(CreateModel, UpdateModel):
                 birthday_list.append(show_user)
         return birthday_list
 
-    @property
-    def show_specified_contract(self):
+    def get_specified_user(self, column_name, days_to_check=5):
         today = jdatetime.date.today()
-        five_days_later = today + jdatetime.timedelta(days=5)
+        five_days_ago = today + jdatetime.timedelta(days=days_to_check)
         counter = 0
-        contract = self.get_contract
-        contract_list = []
-        for c in contract:
+        user_list = []
+        info = self.get_specified_info(column_name)
+        for item in info:
             counter += 1
-            if five_days_later.year == c.year and five_days_later.month == c.month and five_days_later.day == c.day:
-                show_user = self.read_excel_file.loc[counter - 1]
-                contract_list.append(show_user)
-        return contract_list
+            if (five_days_ago.year == item.year and five_days_ago.month == item.month and
+                    five_days_ago.day == item.day):
+                user = self.read_excel_file.loc[counter - 1]
+                user_list.append(user)
+        return user_list
 
-    @property
-    def five_days_later(self):
-        today = jdatetime.date.today()
-        five_days_later = today + jdatetime.timedelta(days=5)
-        return five_days_later
-
-    @property
-    def show_specified_third_party_insurance(self):
-        counter = 0
-        third_party_insurance_list = []
-        third_party_insurance = self.get_third_party_insurance
-        for t in third_party_insurance:
-            counter += 1
-            if (self.five_days_later.year == t.year and self.five_days_later.month == t.month and
-                    self.five_days_later.day == t.day):
-                show_user = self.read_excel_file.loc[counter - 1]
-                third_party_insurance_list.append(show_user)
-        return third_party_insurance_list
-
-    @property
-    def show_rental_insurance(self):
-        counter = 0
-        rental_insurance_list = []
-        rental_insurance = self.get_rental_insurance
-        for r in rental_insurance:
-            counter += 1
-            if (self.five_days_later.year == r.year and self.five_days_later.month == r.month
-                    and self.five_days_later.day == r.day):
-                show_user = self.read_excel_file.loc[counter - 1]
-                rental_insurance_list.append(show_user)
-        return rental_insurance_list
-
-    @property
-    def show_technical_diagnoses(self):
-        counter = 0
-        technical_diagnose_list = []
-        technical_diagnose = self.get_technical_diagnoses
-        for t in technical_diagnose:
-            counter += 1
-            if (self.five_days_later.year == t.year and self.five_days_later.month == t.month
-                    and self.five_days_later.day == t.day):
-                show_user = self.read_excel_file.loc[counter - 1]
-                technical_diagnose_list.append(show_user)
-        return technical_diagnose_list
+    def send_sms_user(self, user_list, message):
+        for user in user_list:
+            full_name = user['نام و نام خوانوادگی']
+            mobile = str(user['شماره همراه'])
+            text = f'کاربر {full_name} {message}'
+            send_message = SmsNegar(mobile, text)
+            send_message.send_sms()
+            print(send_message)
 
     def send_sms_birthday(self):
-        combined_list = []
-        for trustee in self.show_specified_birthday:
-            full_name = trustee['نام و نام خوانوادگی']
-            mobile = str(trustee['شماره همراه'])
-            combined_list.append((full_name, mobile))
-        for name, mobile in combined_list:
-            text = f'کاربر {name} تولدتان مبارک باد'
-            send_massage = SmsNegar(text, mobile)
-            send_massage.send_sms()
-            print(send_massage)
+        user_list = self.show_specified_birthday
+        for user in user_list:
+            full_name = user['نام و نام خوانوادگی']
+            mobile = user['شماره همراه']
+            text = f' تولدتان مبارک باد{full_name}کاربر'
+            send_message = SmsNegar(text, mobile)
+            send_message.send_sms()
+            print(send_message)
 
     def send_sms_contract(self):
-        combined_list = []
-        for contract in self.show_specified_contract:
-            full_name = contract['نام و نام خوانوادگی']
-            mobiles = str(contract['شماره همراه'])
-            combined_list.append((full_name, mobiles))
-        for name, mobile in combined_list:
-            text = f'کاربر گرامی {name} تا پایان قراداتان 5 روز باقی مانده هست'
-            send_message = SmsNegar(text, mobile)
-            send_message.send_sms()
-            print(send_message)
+        user_list = self.get_specified_user('قرارداد')
+        self.send_sms_user(user_list, 'تا پایان قرار داد تان 5 روز باقی مانده هست')
 
     def send_sms_third_party_insurance(self):
-        combined_list = []
-        for tpi in self.show_specified_third_party_insurance:
-            full_name = tpi['نام و نام خوانوادگی']
-            mobiles = str(tpi['شماره همراه'])
-            combined_list.append((full_name, mobiles))
-        for name, mobile in combined_list:
-            text = f'کاربر {name} تا بیمه شخص ثالث تان 5 روز باقی مانده هست'
-            send_message = SmsNegar(text, mobile)
-            send_message.send_sms()
-            print(send_message)
+        user_list = self.get_specified_user('بیمه شخص ثالث')
+        self.send_sms_user(user_list, 'تا پایان بیمه شخص ثالث تان 5 روز باقی مانده هست')
 
     def send_sms_rental_insurance(self):
-        combined_list = []
-        for ri in self.show_rental_insurance:
-            full_name = ri['نام و نام خوانوادگی']
-            mobiles = str(ri['شماره همراه'])
-            combined_list.append((full_name, mobiles))
-        for name, mobile in combined_list:
-            text = f'کاربر {name} مدت بیمه کرایه تان 5 روز باقی مانده هست'
-            send_message = SmsNegar(text, mobile)
-            send_message.send_sms()
-            print(send_message)
+        user_list = self.get_specified_user('بیمه کرایه ای')
+        self.send_sms_user(user_list, 'تا پایان بیمه کرایه تان 5 روز باقی مانده هست')
 
     def send_sms_technical_diagnoses(self):
-        combined_list = []
-        for td in self.show_technical_diagnoses:
-            full_name = td['نام و نام خوانوادگی']
-            mobile = str(td['شماره همراه'])
-            combined_list.append((full_name, mobile))
-        for name, mobile in combined_list:
-            text = f'کاربر {name} مدت معاینه فنی شما 5 روز باقی مانده هست'
-            send_message = SmsNegar(text, mobile)
-            send_message.send_sms()
-            print(send_message)
+        user_list = self.get_specified_user('معاینه فنی ')
+        self.send_sms_user(user_list, 'تا پایان معاینه فنی تان 5 روز باقی مانده هست')
 
 
 class PhoneBookModel(CreateModel, UpdateModel):
