@@ -57,10 +57,10 @@ class SmsNegar:
 
 
 def send_sms_user(user_list, message):
-    for user in user_list:
-        full_name = user['نام و نام خوانوادگی']
-        mobile = str(user['شماره همراه'])
+    for u in user_list:
+        full_name = u['نام و نام خوانوادگی']
+        mobile = str(u['شماره همراه'])
         text = f'کاربر {full_name} {message}'
-        send_message = SmsNegar(mobile, text)
+        send_message = SmsNegar(Smsbody=text, Mobiles=mobile)
         send_message.send_sms()
         print(send_message)
